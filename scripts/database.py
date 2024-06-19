@@ -264,3 +264,184 @@ class Database:
             new_id = 'tr0001'
 
         return new_id
+
+    # This method fetches all the borrowed books by a student.
+    def get_all_borrowed_books(self, stud_obj):
+        with open('../data/all_borrows.csv', mode='r', encoding='utf-8') as borrow_file:
+            borrow_file_reader = csv.reader(borrow_file)
+            book_list = []
+
+            for line in borrow_file_reader:
+                try:
+                    if line[1] == stud_obj.student_id:
+
+                        with open('../data/books.csv', mode='r', encoding='utf-8') as book_file:
+                            book_file_reader = csv.reader(book_file)
+
+                            for book_line in book_file_reader:
+                                try:
+                                    if line[2] == book_line[0]:
+                                        book_obj = Book(book_line[0],
+                                                        book_line[1],
+                                                        book_line[2],
+                                                        book_line[3],
+                                                        book_line[4],
+                                                        book_line[5],
+                                                        book_line[6])
+
+                                        book_obj.borrow_date = line[3]
+
+                                        book_list.append(book_obj)
+                                except IndexError:
+                                    pass
+                                except Exception:
+                                    pass
+                except IndexError:
+                    pass
+                except Exception:
+                    pass
+
+        return book_list
+
+    # This method is used to de-register/remove a student.
+    def deregister(self, student_obj):
+        with open('../data/students.csv', mode='r', newline='', encoding='utf-8') as file_read_obj:
+            csv_reader = csv.reader(file_read_obj)
+
+            with open('../data/temp.csv', mode='w', newline='', encoding='utf-8') as file_write_object:
+                csv_writer = csv.writer(file_write_object)
+
+                for line in csv_reader:
+                    if student_obj.student_id == line[0]:
+                        continue
+                    csv_writer.writerow(line)
+
+        os.remove('../data/students.csv')
+        os.rename('../data/temp.csv', '../data/students.csv')
+
+    # This method is used to get the last librarian id.
+    def fetch_last_librarian_id(self):
+        last = []
+        with open('../data/librarian.csv', mode='r', encoding='utf-8') as file:
+            csv_file = csv.reader(file)
+            lines = []
+            for lines in csv_file:
+                if len(lines) > 0:
+                    last = lines
+            try:
+                return lines[0]
+            except IndexError:
+                return last[0]
+            except Exception:
+                pass
+
+    # This method is used to save a librarian
+    def save_librarian(self, lib_obj):
+        data = [lib_obj.librarian_id, lib_obj.librarian_name, lib_obj.librarian_password]
+        with open('../data/librarian.csv', newline='', mode='a', encoding='utf-8') as file:
+            writer_object = csv.writer(file)
+            writer_object.writerow(data)
+
+    # This method is used to authenticate the librarian.
+    def lib_authenticate(self, lib_id, lib_pass):
+        from librarian import Librarian
+        status = False
+
+        with open('../data/librarian.csv', mode='r', encoding='utf-8') as file:
+            csv_file = csv.reader(file)
+            for lines in csv_file:
+                try:
+                    if lines[0] == lib_id and lines[2] == lib_pass:
+                        status = Librarian(lines[0], lines[1], lines[2])
+                        break
+                except IndexError:
+                    pass
+                except Exception:
+                    pass
+
+        return status
+
+    # This methods is used to get the last book id.
+    def get_last_book_id(self):
+        last = []
+        with open('../data/books.csv', mode='r', encoding='utf-8') as file:
+            csv_file = csv.reader(file)
+            lines = []
+            for lines in csv_file:
+                if len(lines) > 0:
+                    last = lines
+            try:
+                return lines[0]
+            except IndexError:
+                return last[0]
+            except Exception:
+                pass
+
+    # This method is used to save book details in the books file.
+    def save_book(self, book_obj):
+        book_data = [book_obj.book_id, book_obj.book_name, book_obj.book_author, book_obj.book_publisher,
+                     book_obj.book_publish_date,
+                     book_obj.book_availability_status, book_obj.book_copies]
+
+        with open('../data/books.csv', newline='', mode='a', encoding='utf-8') as file_obj:
+            writer_object = csv.writer(file_obj)
+            writer_object.writerow(book_data)
+
+    # This method is used to update book details in the books file.
+    def update_book(self, book_obj):
+        with open('../data/books.csv', mode='r', encoding='utf-8') as file:
+            books = csv.reader(file)
+            success = False
+
+            with open('../data/temp.csv', mode='a', newline='', encoding='utf-8') as temp_file:
+                temp_books = csv.writer(temp_file)
+
+                for book in books:
+                    try:
+                        if book[0] == book_obj.book_id and not success:
+                            success = book
+
+                            data = [book_obj.book_id, book_obj.book_name, book_obj.book_author, book_obj.book_publisher,
+                                    book_obj.book_publish_date, book_obj.book_availability_status, book_obj.book_copies]
+
+                            temp_books.writerow(data)
+                            continue
+                    except IndexError:
+                        continue
+                    except Exception:
+                        continue
+
+                    temp_books.writerow(book)
+
+        os.remove('../data/books.csv')
+        os.rename('../data/temp.csv', '../data/books.csv')
+
+        return success
+
+    # This method is used to remove book details from the books file.
+    def remove_book(self, book_id):
+        with open('../data/books.csv', mode='r', encoding='utf-8') as file:
+            books = csv.reader(file)
+            success = False
+
+            with open('../data/temp.csv', mode='a', newline='', encoding='utf-8') as temp_file:
+                temp_books = csv.writer(temp_file)
+
+                for book in books:
+                    try:
+                        if book[0] == book_id and not success:
+                            success = book
+                            continue
+                    except IndexError:
+                        continue
+                    except Exception:
+                        continue
+
+                    temp_books.writerow(book)
+
+        os.remove('../data/books.csv')
+        os.rename('../data/temp.csv', '../data/books.csv')
+
+        if success:
+            success = Book(success[0], success[1], success[2], success[3], success[4], success[5], success[6])
+        return success
