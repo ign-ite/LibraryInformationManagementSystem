@@ -1,4 +1,3 @@
-# Importing the required libraries
 import csv
 import datetime
 import os
@@ -6,11 +5,9 @@ from book import *
 
 
 class Database:
-    # Intilizing the Database Object (Null in this case)
     def __init__(self):
         pass
 
-    # This method is used to get all the book details from the books file.
     def view_books(self):
         with open('../data/books.csv', mode='r') as file:
             csv_file = csv.reader(file)
@@ -31,7 +28,7 @@ class Database:
                         break
                 count += 1
 
-    # This method is used to view all the books and get the valid book id that the user has selected.
+
     def view_and_select_books(self):
         with open('../data/books.csv', mode='r') as file:
             csv_file = csv.reader(file)
@@ -63,7 +60,7 @@ class Database:
 
         return inp
 
-    # This method is used to print the book details from the books file.
+
     def print_it(self, data):
         try:
             print('\t\t\t\tID            : ', data[0])
@@ -79,7 +76,7 @@ class Database:
         except Exception:
             pass
 
-    # This method is used to validate the student details entered
+
     def authenticate(self, stud_id, stud_password):
         status = False
         from student import Student
@@ -97,7 +94,7 @@ class Database:
 
         return status
 
-    # This method is used to fetch the last student id which is used to generate new id.
+
     def fetch_last_student_id(self):
         last = []
         with open('../data/students.csv', mode='r', encoding='utf-8') as file:
@@ -113,14 +110,14 @@ class Database:
             except Exception:
                 pass
 
-    # This is used to store the student details in students file
+
     def save_student(self, stud_obj):
         data = [stud_obj.student_id, stud_obj.student_name, stud_obj.student_password, stud_obj.student_batch]
         with open('../data/students.csv', newline='', mode='a', encoding='utf-8') as file:
             writer_object = csv.writer(file)
             writer_object.writerow(data)
 
-    # This method allows thee student to borrow a book.
+
     def borrow_book(self, stud_obj, book_id):
         with open('../data/books.csv', mode='r', encoding='utf-8') as file:
             books = csv.reader(file)
@@ -153,7 +150,7 @@ class Database:
 
         return success
 
-    # This method write to a file which track the borrow history.
+
     def update_all_borrows_file(self, stud_obj, book_obj):
         status = False
 
@@ -177,7 +174,7 @@ class Database:
         os.remove('../data/all_borrows.csv')
         os.rename('../data/temp.csv', '../data/all_borrows.csv')
 
-    # This method allows the student to return a book.
+
     def return_book(self, stud_obj, book_id):
         with open('../data/books.csv', mode='r', encoding='utf-8') as file:
             books = csv.reader(file)
@@ -208,7 +205,6 @@ class Database:
             return trans_id, book_obj
         return success
 
-    # This methods gets the last transaction id of a borrow or return.
     def fetch_last_transaction_id(self):
         last = []
         lines = []
@@ -222,12 +218,11 @@ class Database:
             except IndexError:
                 return last[0]
 
-    # This method generates current date.
+
     def get_current_date(self):
         x = datetime.datetime.now()
         return x.strftime("%d-%m-%Y")
 
-    # This method writes borrows and returns to the all_transaction file.
     def write_to_transaction_and_borrow_file(self, stud_obj, book_obj, trans_type):
         transaction_id = self.create_transaction_id()
         today_date = self.get_current_date()
@@ -245,7 +240,6 @@ class Database:
 
         return transaction_id, today_date
 
-    # This method creates a new transaction id.
     def create_transaction_id(self):
         num_of_zeros = 4
         try:
@@ -265,7 +259,6 @@ class Database:
 
         return new_id
 
-    # This method fetches all the borrowed books by a student.
     def get_all_borrowed_books(self, stud_obj):
         with open('../data/all_borrows.csv', mode='r', encoding='utf-8') as borrow_file:
             borrow_file_reader = csv.reader(borrow_file)
@@ -303,7 +296,7 @@ class Database:
 
         return book_list
 
-    # This method is used to de-register/remove a student.
+
     def deregister(self, student_obj):
         with open('../data/students.csv', mode='r', newline='', encoding='utf-8') as file_read_obj:
             csv_reader = csv.reader(file_read_obj)
@@ -319,7 +312,7 @@ class Database:
         os.remove('../data/students.csv')
         os.rename('../data/temp.csv', '../data/students.csv')
 
-    # This method is used to get the last librarian id.
+
     def fetch_last_librarian_id(self):
         last = []
         with open('../data/librarian.csv', mode='r', encoding='utf-8') as file:
@@ -335,14 +328,12 @@ class Database:
             except Exception:
                 pass
 
-    # This method is used to save a librarian
     def save_librarian(self, lib_obj):
         data = [lib_obj.librarian_id, lib_obj.librarian_name, lib_obj.librarian_password]
         with open('../data/librarian.csv', newline='', mode='a', encoding='utf-8') as file:
             writer_object = csv.writer(file)
             writer_object.writerow(data)
 
-    # This method is used to authenticate the librarian.
     def lib_authenticate(self, lib_id, lib_pass):
         from librarian import Librarian
         status = False
@@ -361,7 +352,6 @@ class Database:
 
         return status
 
-    # This methods is used to get the last book id.
     def get_last_book_id(self):
         last = []
         with open('../data/books.csv', mode='r', encoding='utf-8') as file:
@@ -377,7 +367,6 @@ class Database:
             except Exception:
                 pass
 
-    # This method is used to save book details in the books file.
     def save_book(self, book_obj):
         book_data = [book_obj.book_id, book_obj.book_name, book_obj.book_author, book_obj.book_publisher,
                      book_obj.book_publish_date,
@@ -387,7 +376,6 @@ class Database:
             writer_object = csv.writer(file_obj)
             writer_object.writerow(book_data)
 
-    # This method is used to update book details in the books file.
     def update_book(self, book_obj):
         with open('../data/books.csv', mode='r', encoding='utf-8') as file:
             books = csv.reader(file)
@@ -418,7 +406,6 @@ class Database:
 
         return success
 
-    # This method is used to remove book details from the books file.
     def remove_book(self, book_id):
         with open('../data/books.csv', mode='r', encoding='utf-8') as file:
             books = csv.reader(file)
