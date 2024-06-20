@@ -220,7 +220,6 @@ def stud_options(stud_obj):
                 wrong_option -= 1
 
 
-# This method lists all the actions that librarian can perform
 def lib_options(lib_obj):
     wrong_option = 5
 
@@ -255,3 +254,39 @@ def lib_options(lib_obj):
                 print(f'\t\t\t\t|       Remaining attempts : {wrong_option}           |')
                 print('\t\t\t\t------------------------------------------')
                 wrong_option -= 1
+
+
+def check_and_create_file(path, file_name):
+    file_path = f'{path}/{file_name}'
+    check_file = os.path.isfile(file_path)
+
+    if check_file:
+        return
+
+    with open(file_path, mode='w') as f:
+        pass
+
+
+# This method creates the folders and files just before starting the application.
+def create_files_and_folders():
+    path = '../data'
+    check_folder = os.path.isdir(path)
+
+    if not check_folder:
+        os.mkdir(path)
+
+    check_and_create_file(path, 'all_borrows.csv')
+    check_and_create_file(path, 'all_transactions.csv')
+    check_and_create_file(path, 'books.csv')
+    check_and_create_file(path, 'librarian.csv')
+    check_and_create_file(path, 'students.csv')
+
+    print('\t\t\t\t------------------------------------------')
+    print('\t\t\t\t|         Database Initialized           |')
+    print('\t\t\t\t------------------------------------------')
+
+
+# This statement controls that no other module can this main file.
+if __name__ == '__main__':
+    create_files_and_folders()
+    start()
