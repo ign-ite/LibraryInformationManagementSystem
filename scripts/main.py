@@ -176,3 +176,82 @@ def start():
                 print(f'\t\t\t\t|       Remaining attempts : {wrong_option}           |')
                 print('\t\t\t\t------------------------------------------')
                 wrong_option -= 1
+
+
+def stud_options(stud_obj):
+    wrong_option = 5
+
+    while True:
+        print('\t\t\t\t------------------------------------------')
+        print('\t\t\t\t|              Student Menu              |')
+        print('\t\t\t\t------------------------------------------')
+        print('\t\t\t\t|             1. View Books              |')
+        print('\t\t\t\t|             2. Borrow Books            |')
+        print('\t\t\t\t|             3. Return Books            |')
+        print('\t\t\t\t|             4. Compute Fines           |')
+        print('\t\t\t\t|             5. De-Register             |')
+        print('\t\t\t\t------------------------------------------')
+
+        print('\t\t\t\t\tPress enter to exit')
+        print('\t\t\t\t\tEnter your option ')
+        choice = input('\t\t\t\t\t-> ')
+
+        if len(choice) == 0 or wrong_option == 0:
+            break
+
+        match choice:
+            case '1':
+                stud_obj.view_books()
+            case '2':
+                stud_obj.borrow_book()
+            case '3':
+                stud_obj.return_book()
+            case '4':
+                stud_obj.check_fines()
+            case '5':
+                status = stud_obj.deregister()
+                if status:
+                    break
+            case _:
+                print('\t\t\t\t------------------------------------------')
+                print('\t\t\t\t|       Enter the mentioned choices      |')
+                print(f'\t\t\t\t|       Remaining attempts : {wrong_option}           |')
+                print('\t\t\t\t------------------------------------------')
+                wrong_option -= 1
+
+
+# This method lists all the actions that librarian can perform
+def lib_options(lib_obj):
+    wrong_option = 5
+
+    while True:
+        print('\t\t\t\t------------------------------------------')
+        print('\t\t\t\t|              Librarian Menu            |')
+        print('\t\t\t\t------------------------------------------')
+        print('\t\t\t\t|             1. View Books              |')
+        print('\t\t\t\t|             2. Add Books               |')
+        print('\t\t\t\t|             3. Update Books            |')
+        print('\t\t\t\t|             4. Remove Books            |')
+        print('\t\t\t\t------------------------------------------')
+        print('\t\t\t\t\tPress enter to exit')
+        print('\t\t\t\t\tEnter your option ')
+        choice = input('\t\t\t\t\t-> ')
+
+        if len(choice) == 0 or wrong_option == 0:
+            break
+
+        match choice:
+            case '1':
+                lib_obj.view_books()
+            case '2':
+                lib_obj.add_books()
+            case '3':
+                lib_obj.update_book()
+            case '4':
+                lib_obj.remove_book()
+            case _:
+                print('\t\t\t\t------------------------------------------')
+                print('\t\t\t\t|       Enter the mentioned choices      |')
+                print(f'\t\t\t\t|       Remaining attempts : {wrong_option}           |')
+                print('\t\t\t\t------------------------------------------')
+                wrong_option -= 1
